@@ -18,6 +18,7 @@
 #include <Stepper.h>
 
 Servo servo_1;
+
 bool servos_resetted = false;
 const int SERVO_1_CONNECTION_PIN = 9;
 const int SERVO_RESET_POS = 0;
@@ -65,10 +66,9 @@ void setup()
 
 void ResetServoOnce(Servo servo) 
 {
-  if(!servo.attached()) 
+  if(!servo.attached) 
   {
-    Serial.print("Servo is not attached ...");
-    Serial.println();
+    printLine("Servo is not attached ...");
     //Throw or just returns ?
     return;
   }
@@ -84,19 +84,23 @@ void WaitUntillAttached(Servo servo)
 {
   int maxtries = 5;
   int tries = 0;
-  while (!servo.attached() && tries < maxtries)
+  while (!servo.attached && tries < maxtries)
   {
-    tries++;
-    Serial.print("Try " + tries); //Use std::format but need additional libraries 
-    Serial.print(": NOT Attached waiting 1000 milliseconds..");    
-    Serial.println();
+    tries++;    
+    printLine(std::format("Try {0} : NOT Attached waiting 1000 milliseconds..", tries);
     delay(ONE_SECOND);
   }  
 
-  if(!servo.attached()) 
+  if(!servo.attached) 
   {
     //What to do usually throw an exception you can't so anything right ? 
   }
+}
+
+void printLine(string message) 
+{
+  Serial.print(message);
+  Serial.writeln();
 }
 
 void loop()
