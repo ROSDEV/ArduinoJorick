@@ -53,10 +53,8 @@ void setup()
   pinMode(KNOP_PIN1, INPUT);        //knopPin is input
   small_stepper1.setSpeed(500);     
   small_stepper2.setSpeed(500);
-  
- // while(digitalRead(knopPin)== HIGH);
 
-  pinMode(7, INPUT);  //mircoswitch 
+  pinMode(7, INPUT);  //mircoswitch //TODO maak van 7 een duidelijk variable wat de pin voorstelt
   pinMode(13, OUTPUT); //"lampje" 
   
   digitalWrite(13, LOW); //hier wordt de mircoswitch niet ingedrukt en gebeuert dus niks
@@ -69,7 +67,7 @@ void ResetServoOnce(Servo servo)
   {
     Serial.print("Servo is not attached ...");
     Serial.println();
-    //Throw or just returns ?
+    //TODO Throw or just returns ?
     return;
   }
   if(!servos_resetted) 
@@ -87,7 +85,7 @@ void WaitUntillAttached(Servo servo)
   while (!servo.attached() && tries < maxtries)
   {
     tries++;
-    Serial.print("Try " + tries); //Use std::format but need additional libraries 
+    Serial.print("Try " + tries); //TODO Use std::format but need additional libraries print plak alles achter elkaar printLn doet een linefeed er aan toevoegen. je kan overwegen om een functie te maken dit in 1 keer doet)
     Serial.print(": NOT Attached waiting 1000 milliseconds..");    
     Serial.println();
     delay(ONE_SECOND);
@@ -95,24 +93,28 @@ void WaitUntillAttached(Servo servo)
 
   if(!servo.attached()) 
   {
-    //What to do usually throw an exception you can't so anything right ? 
+    //TODO je kan een exceptie gooien wat de applicatie laat crashend of een boolean returnen of het gelukt is...
+    //Dit staan nu in de loop mss kan dit in de setup maar goed heb geen arduino draaien dus weet niet zo goed of het zo ook lukt.
   }
 }
 
 void loop()
 {
-  WaitUntillAttached(servo_1);
+  WaitUntillAttached(servo_1);  
   ResetServoOnce(servo_1);
 
   int knopstatus = digitalRead(KNOP_PIN1);  
   if (knopstatus == KNOP_UIT)
   { 
     for(int s = 0; s < step_360; s++) // waarde wordt veranderd van 0 naar 1, hij voert dus waarde 1 uit totdat hij naar waarde 0 wordt gebracht. Hier gaan we zeggen dat hij gestopt moet worden met de microswitch.
-    {
+    {      
+      //TODO de variable step_360 is raar genoemd. Het moet denk ik een maximum van iets voorstellen. Noem het dan ook zo. 
+      //TODO de for loop kan je in een aparte functie stoppen. En een duidelijk naam geven. 'void steppersNaarPositie(int positie, int stapgrootte)'            
       small_stepper1.step(1);
       small_stepper2.step(1);
     }
 
+    //TODO 'digitalRead(7) == LOW' zegt mij helemaal niets. Maak een een functie bool deviceHeeftStatus(DEVICE_OP_PIN_7, LOW) const int DEVICE_OP_PIN_7 = 7
     if(digitalRead(7) == LOW) // als switch niet is ingedrukt dan lampje 13 aan anders(else) is lampje 13 uit , low == aan
     {
       digitalWrite(13, HIGH);
